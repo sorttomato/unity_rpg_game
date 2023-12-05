@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+       
     }
 
     // Update is called once per frame
