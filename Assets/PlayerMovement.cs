@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private enum MovementState { up, down, left, right }
+    private enum MovementState { idle, up, down, left, right }
     private Rigidbody2D rb;
     private float MoventSpeed = 4f;
     private Animator anim;
@@ -21,7 +21,6 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         currentHealth = maxHealth;
-       
     }
 
     // Update is called once per frame
@@ -48,7 +47,12 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateAnimationState()
     {
         MovementState state;
-        if (Mathf.Abs(dirX) > Mathf.Abs(dirY))
+
+        if (dirX == 0f && dirY == 0f)
+        {
+            state = MovementState.idle;
+        }
+        else if (Mathf.Abs(dirX) > Mathf.Abs(dirY))
         {
             if (dirX > 0f)
             {
@@ -70,6 +74,7 @@ public class PlayerMovement : MonoBehaviour
                 state = MovementState.down;
             }
         }
+
         anim.SetInteger("state", (int)state);
     }
 }
