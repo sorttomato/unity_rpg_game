@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private enum MovementState { idle, up, down, left, right }
+    private enum MovementState { idle, running }
+
     private Rigidbody2D rb;
-    private float MoventSpeed = 4f;
+    private float MovementSpeed = 4f;
     private Animator anim;
-    float dirX;
-    float dirY;
+    private float dirX;
+    private float dirY;
+
+    private Vector2 lastDirection = Vector2.down;  // Default direction is down for idle state
 
     public int maxHealth = 100;
     public int currentHealth;
@@ -28,7 +31,8 @@ public class PlayerMovement : MonoBehaviour
     {
         dirX = Input.GetAxis("Horizontal");
         dirY = Input.GetAxis("Vertical");
-        rb.velocity = new Vector2(dirX * MoventSpeed, dirY * MoventSpeed);
+
+        rb.velocity = new Vector2(dirX * MovementSpeed, dirY * MovementSpeed);
         UpdateAnimationState();
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -43,7 +47,6 @@ public class PlayerMovement : MonoBehaviour
         healthBar.SetHealth(currentHealth);
     }
 
-
     private void UpdateAnimationState()
     {
         MovementState state;
@@ -52,29 +55,14 @@ public class PlayerMovement : MonoBehaviour
         {
             state = MovementState.idle;
         }
-        else if (Mathf.Abs(dirX) > Mathf.Abs(dirY))
-        {
-            if (dirX > 0f)
-            {
-                state = MovementState.right;
-            }
-            else
-            {
-                state = MovementState.left;
-            }
-        }
         else
         {
-            if (dirY > 0f)
-            {
-                state = MovementState.up;
-            }
-            else
-            {
-                state = MovementState.down;
-            }
+            state = MovementState.running;
+            lastDirection = new Vector2(dirX, dirY).normalized;
         }
 
-        anim.SetInteger("state", (int)state);
+        anim.SetFloat("BlendX", lastDirection.x);
+        anim.SetFloat("BlendY", lastDirection.y);
+        anim.SetInteger("State", (int)state);
     }
 }
