@@ -1,0 +1,4 @@
+repository "unity_rpg_game@sortoftomato@cloud"
+  path "/"
+    br "/main"
+    co "/main"
